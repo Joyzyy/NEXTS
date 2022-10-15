@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import { useContext } from 'react';
 import { ProductContext } from '@/lib/product';
 
@@ -15,9 +17,6 @@ const _tabs: React.FC = () => {
   return (
     <Box mt={12}>
       {error && <Box>There was an error.</Box>}
-      {
-        // eslint-disable-next-line
-      }
       <_component
         name={names}
         children={names.map((name, index) => (
