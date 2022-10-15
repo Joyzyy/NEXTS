@@ -35,7 +35,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const response = (
     await axios.get<ProductResponseIndividual>(
-      `${process.env.NEXT_PUBLIC_API}/product/${params?.name}`,
+      `https://nextsedge-di84.vercel.app/api/product/${params?.name}`,
     )
   ).data;
 

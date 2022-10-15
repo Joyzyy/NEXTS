@@ -15,7 +15,9 @@ const Home: NextPage<ProductResponse> = ({ error, data }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const request = (await axios.get<ProductResponse>(`${process.env.NEXT_PUBLIC_API}/product`)).data;
+  const request = (
+    await axios.get<ProductResponse>(`https://nextsedge-di84.vercel.app/api/product`)
+  ).data;
 
   return {
     props: {

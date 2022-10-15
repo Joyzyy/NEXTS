@@ -9,8 +9,9 @@ const Shop: NextPage<ProductResponse> = ({ data, error }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const response = (await axios.get<ProductResponse>(`${process.env.NEXT_PUBLIC_API}/product`))
-    .data;
+  const response = (
+    await axios.get<ProductResponse>(`https://nextsedge-di84.vercel.app/api/product`)
+  ).data;
 
   return {
     props: {
