@@ -37,7 +37,7 @@ function ___drawer({ btnRef, isOpen, onClose }: Props) {
         <DrawerHeader>Your shopping cart</DrawerHeader>
         <DrawerBody>
           {cartItems?.map((item) => (
-            <p>{item}</p>
+            <p key={item}>{item}</p>
           ))}
           {JSON.stringify(data, null, 2)}
         </DrawerBody>
