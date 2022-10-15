@@ -6,6 +6,8 @@ import {
 } from '@/lib/product';
 import axios from 'axios';
 
+import prisma from '@/lib/prisma';
+
 import { ProductName } from '@/components/Shop/[name]';
 
 const ProductPage: NextPage<ProductResponseIndividual> = ({ error, data }) => {
@@ -17,10 +19,12 @@ const ProductPage: NextPage<ProductResponseIndividual> = ({ error, data }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const response = (await axios.get<ProductResponse>(`${process.env.NEXT_PUBLIC_API}/product`))
-    .data;
+  // const response = (await axios.get<ProductResponse>(`${process.env.NEXT_PUBLIC_API}/product`))
+  //   .data;
 
-  const paths = response.data.map((product) => ({
+  const data = await prisma.product.findMany();
+
+  const paths = data.map((product) => ({
     params: {
       name: product.name.toString(),
     },
