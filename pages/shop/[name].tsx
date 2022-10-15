@@ -50,4 +50,4 @@ const ProductPage: NextPage<ProductResponseIndividual> = ({ error, data }) => {
 //   };
 // };
 
-// export default ProductPage;
+export default ProductPage;
