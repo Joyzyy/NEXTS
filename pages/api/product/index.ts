@@ -87,7 +87,7 @@ export default async function handler(req: ExtendedNextApiRequest, res: NextApiR
           ? res.json({ data: product, error: null })
           : res.json({ data: null, error: 'Products not found.' });
       })
-      .catch((error) => res.status(500).json({ error: error.message }));
+      .catch((error) => res.status(500).json(error));
 
     return;
   } else if (req.method === 'POST') {
