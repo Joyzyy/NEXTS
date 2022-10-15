@@ -1,29 +1,75 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 import type { NextRequest } from 'next/server';
-import { Product } from '@prisma/client';
+import type { Product } from '@/lib/product';
 import prisma from '@/lib/prisma';
 
 export const config = {
   runtime: 'experimental-edge',
 };
 
+// async function streamToText(stream: ReadableStream<Uint8Array>): Promise<string> {
+//   let result = '';
+
+//   const reader = stream.pipeThrough(new TextDecoderStream()).getReader();
+//   while (true) {
+//     const { done, value } = await reader.read();
+//     if (done) break;
+//     result += value;
+//   }
+
+//   return result;
+// }
+
 export default async function handler(req: NextRequest) {
   if (req.method === 'GET') {
-    await prisma.product
-      .findMany()
-      .then((product) => {
-        return product
-          ? new Response(JSON.stringify({ data: product, error: null }), {
-              status: 200,
-              headers: {
-                'content-type': 'application/json',
-                'cache-control': 'public, s-maxage=1200, stale-while-revalidate=600',
-              },
-            })
-          : new Response(JSON.stringify({ data: null, error: 'No products found' }));
-      })
-      .catch((error) => new Response(JSON.stringify({ error: error.message }), { status: 500 }));
+    try {
+      const data = await prisma.product.findMany();
+      if (!data) return new Response('Couldnt find any products');
+
+      return new Response(JSON.stringify({ data: data, error: null }), {
+        status: 200,
+        headers: {
+          'content-type': 'applicaton/json',
+          'cache-control': 'public, s-maxage=1200, stale-while-revalidate=600',
+        },
+      });
+    } catch (error: any) {
+      return new Response(JSON.stringify(error.message));
+    }
+  } else if (req.method === 'POST') {
+    try {
+      const body: Product = await req.json();
+      const data = await prisma.product.create({
+        data: {
+          name: body.name,
+          description: body.description,
+          category: body.category,
+          price: body.price,
+          image: body.image,
+          sizes: body.sizes,
+          tabtype: body.tabtype,
+        },
+      });
+
+      if (!data)
+        return new Response(
+          JSON.stringify({ product: null, error: 'Couldnt create a new product' }),
+        );
+
+      return new Response(
+        JSON.stringify({
+          product: data,
+          error: null,
+        }),
+        {
+          status: 200,
+          headers: {
+            'content-type': 'applicaton/json',
+          },
+        },
+      );
+    } catch (error: any) {
+      return new Response(JSON.stringify({ error: error.message }));
+    }
   }
 }
 
