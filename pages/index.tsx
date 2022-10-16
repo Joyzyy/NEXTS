@@ -6,7 +6,7 @@ import { HomeC } from '@/components/Home';
 import { ProductResponse } from '@/lib/product';
 
 const Home: NextPage<ProductResponse> = ({ error, data }) => {
-  console.log(data);
+  console.log(error);
   return (
     <ProductContext.Provider value={{ error, data }}>
       <HomeC />

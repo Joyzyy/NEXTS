@@ -88,10 +88,10 @@ export default async function handler(req: ExtendedNextApiRequest, res: NextApiR
           : res.json({ data: null, error: 'Products not found.' });
       })
       .catch((error) => {
-        console.log(error.msg);
-        res.status(101).json(error);
+        console.log(error.message);
+        res.status(500).json(error.message);
       });
-
+    prisma.$disconnect();
     return;
   } else if (req.method === 'POST') {
     const body = req.body;
@@ -114,7 +114,7 @@ export default async function handler(req: ExtendedNextApiRequest, res: NextApiR
           : res.json({ data: null, error: 'couldnt create a new product' });
       })
       .catch((error) => res.status(500).json({ error }));
-
+    prisma.$disconnect();
     return;
   }
   return;

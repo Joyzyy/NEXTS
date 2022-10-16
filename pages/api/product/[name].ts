@@ -50,6 +50,6 @@ export default async function handler(req: ExtendedNextApiRequest, res: NextApiR
         : res.json({ data: null, error: 'No product found' });
     })
     .catch((error) => res.status(500).json({ data: null, error: error.message }));
-
+  prisma.$disconnect();
   return;
 }
