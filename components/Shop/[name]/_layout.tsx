@@ -90,7 +90,7 @@ function _productshoplayout(props: Product) {
                 </IconButton>
               </HStack>
               <Select placeholder='Size' maxW={120}>
-                {props.sizes.map((value, iIdx) => (
+                {props.sizes?.map((value, iIdx) => (
                   <option key={iIdx} value={value.toString()}>
                     {value}
                   </option>
