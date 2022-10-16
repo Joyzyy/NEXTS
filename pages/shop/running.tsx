@@ -7,9 +7,12 @@ const Running: NextPage<ProductResponse> = ({ data, error }) => {
   return <_layout layout_items={data} />;
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const response = (await axios.get<ProductResponse>(`https://nextsedge.vercel.app/api/product`))
-    .data;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  let url: string;
+  if (process.env.NODE_ENV === 'production') url = `https://${context.req.rawHeaders[1]}`;
+  else url = 'http://localhost:3000';
+
+  const response = (await axios.get<ProductResponse>(`${url}/api/product`)).data;
 
   const filtered_data = response.data.filter((item) => item.category.toLowerCase() === 'running');
 

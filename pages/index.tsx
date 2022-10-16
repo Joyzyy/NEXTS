@@ -14,9 +14,12 @@ const Home: NextPage<ProductResponse> = ({ error, data }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const request = (await axios.get<ProductResponse>(`https://nextsedge.vercel.app/api/product`))
-    .data;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  let url: string;
+  if (process.env.NODE_ENV === 'production') url = `https://${context.req.rawHeaders[1]}`;
+  else url = 'http://localhost:3000';
+
+  const request = (await axios.get<ProductResponse>(`${url}/api/product`)).data;
 
   return {
     props: {
