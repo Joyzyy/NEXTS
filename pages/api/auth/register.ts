@@ -8,6 +8,7 @@ type ReqBody = {
   username: string;
   email: string;
   password: string;
+  cartItems: string;
 };
 
 interface ExtendedNextApiRequest extends NextApiRequest {
@@ -20,7 +21,7 @@ export default async function handler(req: ExtendedNextApiRequest, res: NextApiR
     return;
   }
 
-  const { username, email, password } = req.body;
+  const { username, email, password, cartItems } = req.body;
 
   await prisma.user
     .create({
@@ -28,30 +29,42 @@ export default async function handler(req: ExtendedNextApiRequest, res: NextApiR
         name: username,
         email: email,
         password: await bcrypt.hash(password, await bcrypt.genSalt()),
+        cart: {
+          create: {
+            productsId: cartItems?.split(','),
+          },
+        },
       },
     })
     .then((new_user) => {
-      new_user
-        ? res.setHeader(
-            'Set-Cookie',
-            serialize(
-              'rt_as_cookie',
-              jsonwebtoken.sign({ id: new_user.id }, 'someotherrandomkey_yahahahahimgoinginsane', {
-                expiresIn: '14d',
-              }),
-              {
-                sameSite: 'none',
-                httpOnly: true,
-                maxAge: 60 * 60 * 24 * 14,
-              },
-            ),
-          ) &&
-          res.json({
-            jwt: jsonwebtoken.sign({ id: new_user.id }, 'randomkey_BABYKEEMGOAT', {
-              expiresIn: '7d',
-            }),
-          })
-        : res.json({ error: 'Couldnt create a new user' });
+      if (!new_user) {
+        res.json({ error: 'Couldnt create a new user' });
+        return;
+      }
+
+      res.setHeader(
+        'Set-Cookie',
+        serialize(
+          'rt_as_cookie',
+          jsonwebtoken.sign({ id: new_user.id }, 'someotherrandomkey_yahahahahimgoinginsane', {
+            expiresIn: '14d',
+          }),
+          {
+            sameSite: 'lax',
+            httpOnly: true,
+            maxAge: 60 * 60 * 24 * 14,
+            secure: true,
+          },
+        ),
+      );
+
+      res.json({
+        jwt: jsonwebtoken.sign({ id: new_user.id }, 'randomkey', {
+          expiresIn: '7d',
+        }),
+      });
+
+      return;
     })
     .catch((error) => res.status(500).json({ error: error.message }));
 

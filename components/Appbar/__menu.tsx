@@ -23,14 +23,26 @@ export { __menu };
 
 function ___isLoggedInLinks({ isLoggedIn }: { isLoggedIn: boolean | undefined }) {
   const { _LinksLoggedIn, _LinksGuest } = AppbarConstants;
+
+  const handleLogout = () => {
+    localStorage.removeItem('jwt');
+    window.location.reload();
+  };
+
   if (isLoggedIn) {
     return (
       <>
-        {_LinksLoggedIn.map((props, index) => (
-          <Link href={props.href} key={index}>
-            <MenuItem icon={props.icon}>{props.text}</MenuItem>
-          </Link>
-        ))}
+        {_LinksLoggedIn.map((props, index) =>
+          props.text !== 'Logout' ? (
+            <Link href={props.href} key={index}>
+              <MenuItem icon={props.icon}>{props.text}</MenuItem>
+            </Link>
+          ) : (
+            <MenuItem icon={props.icon} onClick={handleLogout} key={index}>
+              {props.text}
+            </MenuItem>
+          ),
+        )}
       </>
     );
   } else {
@@ -65,7 +77,7 @@ function __menu() {
       </MenuButton>
 
       <MenuList>
-        <MenuItem isDisabled>{'guest'}</MenuItem>
+        <MenuItem isDisabled>Hello, {loggedIn ? localStorage.getItem('email') : 'guest'}</MenuItem>
         <___isLoggedInLinks isLoggedIn={loggedIn} />
         <MenuDivider />
 

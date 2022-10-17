@@ -43,9 +43,10 @@ export default async function handler(req: ExtendedNextApiRequest, res: NextApiR
                       },
                     ),
                     {
-                      sameSite: 'strict',
+                      sameSite: 'lax',
                       httpOnly: true,
                       maxAge: 60 * 60 * 24 * 14,
+                      secure: true,
                     },
                   ),
                 ) &&

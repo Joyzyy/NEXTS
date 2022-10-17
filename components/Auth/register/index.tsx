@@ -1,59 +1,89 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { _layout } from '../_layout';
-import { FiMail } from 'react-icons/fi';
-import { MdPassword } from 'react-icons/md';
-import { HiUser } from 'react-icons/hi';
+import { AuthConstants } from '@/constants/Auth';
+import { setCookie } from 'cookies-next';
+
+import axios from 'axios';
 
 export { _register };
 
+type FormStateType = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+type ResponseType = {
+  jwt: string;
+  error: string;
+};
+
 function _register() {
-  const [formState, setFormState] = useState<{ username: string; email: string; password: string }>(
-    {
-      username: '',
-      email: '',
-      password: '',
-    },
-  );
+  const [formState, setFormState] = useState<FormStateType>({
+    username: '',
+    email: '',
+    password: '',
+  });
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
   };
 
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formState);
+
+    console.log(localStorage.getItem('cartItems'));
+
+    await axios
+      .post<ResponseType>(
+        '/api/auth/register',
+        {
+          username: formState.username,
+          email: formState.email,
+          password: formState.password,
+          cartItems: localStorage.getItem('cartItems')
+            ? JSON.parse(JSON.stringify(localStorage.getItem('cartItems')!))
+            : null,
+        },
+        {
+          withCredentials: true,
+        },
+      )
+      .then((result) => {
+        if (result.data.error) {
+          setError(result.data.error);
+          return;
+        }
+
+        localStorage.setItem('jwt', result.data.jwt);
+        localStorage.setItem('email', formState.email);
+
+        setCookie('token', result.data.jwt, {
+          maxAge: 60 * 60 * 24 * 7,
+          path: '/',
+        });
+
+        localStorage.removeItem('cartItems');
+        router.push('/', undefined, { shallow: true });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
     <_layout
       title='Register'
-      inputs={[
-        {
-          icon: <HiUser />,
-          name: 'username',
-          placeholder: 'Username',
-          type: 'text',
-          value: '',
-          onChange: handleChange,
-        },
-        {
-          icon: <FiMail />,
-          name: 'email',
-          placeholder: 'Email',
-          type: 'email',
-          value: '',
-          onChange: handleChange,
-        },
-        {
-          icon: <MdPassword />,
-          name: 'password',
-          placeholder: 'Password',
-          type: 'password',
-          value: '',
-          onChange: handleChange,
-        },
-      ]}
+      inputs={AuthConstants.RegisterConstants.map((input) => ({
+        ...input,
+        onChange: handleChange,
+      }))}
       onSubmit={handleOnSubmit}
+      error={error}
+      loading={loading}
     />
   );
 }
