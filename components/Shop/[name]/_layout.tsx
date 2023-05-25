@@ -117,7 +117,8 @@ function _productshoplayout(props: Product) {
                   rounded={'full'}
                   aria-label={'add to favorites'}
                   colorScheme={'blue'}
-                  bgColor={useColorModeValue('blue.400', 'blue.500')}
+                  bgColor='blue.400'
+                  _dark={{backgroundColor: 'blue.500'}}
                 >
                   <FaHeart />
                 </IconButton>

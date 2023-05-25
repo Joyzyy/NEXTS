@@ -13,7 +13,8 @@ type Props = {
 function _component(props: Props) {
   return (
     <Box
-      backgroundColor={useColorModeValue('blackAlpha.100', 'blackAlpha.300')}
+      backgroundColor='blackAlpha.100'
+      _dark={{backgroundColor: 'blackAlpha.300'}}
       rounded={'xl'}
       minWidth={{
         base: '100%',
@@ -27,7 +28,8 @@ function _component(props: Props) {
             fontWeight={'semibold'}
             fontSize={12}
             colorScheme={'whiteAlpha'}
-            color={useColorModeValue('blackAlpha.900', 'whiteAlpha.500')}
+            color='blackAlpha.900'
+            _dark={{color: 'whiteAlpha.500'}}
           >
             {props.category}
           </Text>
@@ -41,7 +43,8 @@ function _component(props: Props) {
             <Button
               variant={'ghost'}
               colorScheme={'blue'}
-              color={useColorModeValue('blue.900', 'blue.400')}
+              color='blue.900'
+              _dark={{color: 'blue.400'}}
             >
               Learn more →
             </Button>

@@ -37,7 +37,8 @@ function _layout(props: Props) {
   return (
     <Center>
       <Box
-        bgColor={useColorModeValue('white', 'bg-gray-900')}
+        bgColor='white'
+        _dark={{backgroundColor: 'bg-gray-900'}}
         mt={{
           base: '10',
           md: '48',
@@ -59,7 +60,8 @@ function _layout(props: Props) {
             alignItems={'center'}
             mb={6}
             fontWeight={'semibold'}
-            textColor={useColorModeValue('gray.900', 'white')}
+            textColor='gray.900'
+            _dark={{textColor: 'white'}}
           >
             <Image
               src={'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg'}
@@ -74,7 +76,8 @@ function _layout(props: Props) {
 
         <Box
           w={{ base: 'max-content', md: 'container.sm' }}
-          bgColor={useColorModeValue('white', 'gray.800')}
+          bgColor='white'
+          _dark={{backgroundColor: 'gray.800'}}
           rounded={'lg'}
           shadow={'lg'}
           p={{ base: 4, xl: 0 }}
@@ -84,7 +87,8 @@ function _layout(props: Props) {
               as={'h1'}
               fontSize={{ base: 'xl', md: '2xl' }}
               fontWeight={'bold'}
-              textColor={useColorModeValue('gray.900', 'white')}
+              textColor='gray.900'
+              _dark={{textColor: 'white'}}
             >
               {props.title}
             </Text>
@@ -102,12 +106,18 @@ function _layout(props: Props) {
                       name={input.name}
                       placeholder={input.placeholder}
                       type={input.type}
-                      bgColor={useColorModeValue('gray.50', 'gray.700')}
+                      bgColor='gray.50'
+                      _dark={{
+                        backgroundColor: 'gray.700',
+                        borderColor: 'gray.600',
+                        textColor: 'white'
+                      }}
                       rounded={'md'}
-                      borderColor={useColorModeValue('gray.200', 'gray.600')}
-                      textColor={useColorModeValue('gray.900', 'white')}
+                      borderColor='gray.200'
+                      textColor='gray.900'
                       _placeholder={{
-                        textColor: useColorModeValue('gray.500', 'gray.400'),
+                        textColor: 'gray.500',
+                        _dark: {textColor: 'gray.400'}
                       }}
                       onChange={input.onChange}
                     />

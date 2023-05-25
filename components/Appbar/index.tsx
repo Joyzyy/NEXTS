@@ -21,16 +21,18 @@ const Appbar: React.FC = () => {
 
   return (
     <Box
-      bg={useColorModeValue('white', 'gray.800')}
+      bg='white'
+      _dark={{bg: 'gray.800', borderColor: 'gray.900'}}
       px={4}
       borderBottom={1}
       borderStyle={'solid'}
-      borderColor={useColorModeValue('gray.200', 'gray.900')}
+      borderColor='gray.200'
     >
       <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
         <IconButton
           aria-label={'Open menu'}
-          bgColor={useColorModeValue('gray.100', 'gray.600')}
+          bgColor='gray.100'
+          _dark={{backgroundColor: 'gray.600'}}
           size={'md'}
           icon={<Center>{isOpen ? <CgClose /> : <HiMenu />}</Center>}
           onClick={isOpen ? onClose : onOpen}

@@ -17,9 +17,10 @@ type Props = {
 function _layout(props: Props) {
   return (
     <Box
-      backgroundColor={useColorModeValue('white', 'gray.800')}
+      backgroundColor='white'
+      _dark={{backgroundColor: 'gray.800', textColor: 'gray.200'}}
       minH={'100vh'}
-      textColor={useColorModeValue('gray.600', 'gray.200')}
+      textColor='gray.600'
     >
       <Container maxWidth={'8xl'} px={5} py={24} mx={'auto'}>
         <Center>
